@@ -40,4 +40,4 @@ SPICE position ephemeris file a.k.a. SPK
 #### Python modules matplotlib, [SpiceyPy](https://github.com/AndrewAnnex/SpiceyPy)
 
 ## Github source
-### (https://github.com/drbitboy/relvel)[https://github.com/drbitboy/relvel]
+### (https://github.com/drbitboy/relvel)
