@@ -1,5 +1,5 @@
 
- ![](https://github.com/drbitboy/relvel/raw/master/img/dRange-dt.pngs)
+ ![](https://github.com/drbitboy/relvel/raw/master/img/dRange-dt.png)
 
  ![](https://github.com/drbitboy/relvel/raw/master/img/Alongtrack_vs_range.png)
 
