@@ -1,0 +1,149 @@
+Model contant-velocity linear flyby of Bennu (21010955) by S/C ORX
+
+
+Frames
+======
+
+ J2000          - Inertial frame; also "j2k"
+ ORX_SPACECRAFT - S/C frame; +Y points at Bennu; +X toward S/C velocity
+ ORX_INSTR      - Instrument frame; TK frame, coincident with S/C frame
+
+
+Bodies
+======
+
+ O - Bennu (SPICE Body ID = 2101955)
+ @ - Spacecraft COM (S/C; SPICE Body ID = -64)
+ i - Some S/C Instrument, offset from S/C COM by 6km along -Xsc)
+
+
+                                       J2000 Reference Frame (reffrm)
+                                       ^
+                                  +Yj2k|
+                                       |
+                                       |
+                                       |
+                                       |               +Xj2k
+ ------      <-------------------------O-------------------->
+   ^          -Xj2k                   /| O = Origin = Bennu(2101955)
+   |                                 / |jk.
+   |                                /  |
+   |                               /   |
+   |                              /    |
+   |                             /     |
+  8km     Inst(-64999)          /      |
+   |     i   @(-6,0,0), km     /       |
+   |      `-_                 /+Ysc    |
+   |         `-_             /+Yinstr  |
+   |            `-_         /          |
+   |               `-_     /           |
+   v                  `-_ /            |
+ ------                  @==========================> S/Cvel = (+1,0,0)km/s
+                      S/C  `-_         |
+                              `-_      |
+                             +Xsc`-_   |
+                             +Xinstr`- |
+                                       |
+                                       |-Yj2k
+                                       v
+
+N.B. _DXYZ is in m/y ~ km/s * (1e3m/km) * (PIe7s/y)
+     So 1km/s = 3.1557e10m/y
+
+
+========================================================================
+Begin PINPOINT inputs to create SPK
+========================================================================
+
+- SITES are ORX (S/C; -64) and ORXINSTR (Instrument; -64999)
+                                                             \begindata
+SITES = ( 'ORX' 'ORXINSTR' )
+                                                             \begintext
+========================================================================
+- Pinpoint data for body ORX (-64) linear flyby of Bennu
+  - Position is wrt Bennu
+  - Along Y=-8km in J2000 YZ plane
+  - Moving at 1km/s toward J2000 +X
+    - Equivalent to ~3.155e10m/y
+  - TCA (Time of Closest Approach)
+    - at X=0km
+    - at ET=0s TDB (J2000 epoch 2000-Jan-01/12:00)
+                                                             \begindata
+ORX_IDCODE              = -64
+ORX_CENTER              = 2101955
+ORX_FRAME               = 'J2000'
+ORX_XYZ                 = ( 0. -8. 0. )
+ORX_DXYZ                = ( 3.15576d10 0. 0. )
+ORX_EPOCH               = 0.
+ORX_BOUNDS              = ( -86400. +86400. )
+                                                             \begintext
+========================================================================
+- Pinpoint data for ORXINSTR (-64999)
+  - Position is wrt S/C
+  - Offset 6km from toward -X in ORX_INSTR frame
+                                                             \begindata
+
+ORXINSTR_IDCODE         = -64999
+ORXINSTR_CENTER         = -64
+ORXINSTR_FRAME          = 'ORX_INSTR'
+ORXINSTR_XYZ            = ( -6. 0. 0. )
+ORXINSTR_BOUNDS         = ( -86400. +86400. )
+                                                             \begintext
+========================================================================
+Frames' definitions
+========================================================================
+
+========================================================================
+- ORX_SPACERAFT frame (-64000; subscript sc)
+  - Use two-vector dynamic frame (Class 5), so no CK needed
+                                                             \begindata
+FRAME_ORX_SPACECRAFT        = -64000
+FRAME_-64000_NAME           = 'ORX_SPACECRAFT'
+FRAME_-64000_CLASS          = 5
+FRAME_-64000_CLASS_ID       = -64000
+FRAME_-64000_CENTER         = -64
+
+FRAME_-64000_DEF_STYLE      = 'PARAMETERIZED'
+FRAME_-64000_RELATIVE       = 'J2000'
+FRAME_-64000_FAMILY         = 'TWO-VECTOR'
+                                                             \begintext
+========================================================================
+  - Primary axis:  +Ysc points from S/C (-64)
+                   toward Bennu (2101955)
+                                                             \begindata
+FRAME_-64000_PRI_AXIS       = '+Y'
+FRAME_-64000_PRI_VECTOR_DEF = 'OBSERVER_TARGET_POSITION'
+FRAME_-64000_PRI_OBSERVER   = '-64'
+FRAME_-64000_PRI_TARGET     = '2101955'
+FRAME_-64000_PRI_ABCORR     = 'NONE'
+                                                             \begintext
+========================================================================
+  - Secondary axis:  Roll frame around Ysc so +Xsc is as
+                     close as possible to Bennu-relative
+                     S/C velocity in J2000 frame
+                                                             \begindata
+FRAME_-64000_SEC_AXIS       = '+X'
+FRAME_-64000_SEC_VECTOR_DEF  = 'OBSERVER_TARGET_VELOCITY'
+FRAME_-64000_SEC_OBSERVER    = '2101955'
+FRAME_-64000_SEC_TARGET      = '-64'
+FRAME_-64000_SEC_FRAME       = 'J2000'
+FRAME_-64000_SEC_ABCORR      = 'NONE'
+                                                             \begintext
+========================================================================
+- ORX_INSTR frame (-64999; subscript instr)
+  - TK frame (Class 4)
+  - Set coincident with ORX_SPACECRAFT using identity matrix
+                                                             \begindata
+
+FRAME_ORX_INSTR         = -64999
+FRAME_-64999_NAME       = 'ORX_INSTR'
+FRAME_-64999_CLASS      = 4
+FRAME_-64999_CLASS_ID   = -64999
+FRAME_-64999_CENTER     = -64999
+TKFRAME_-64999_SPEC     = 'MATRIX'
+TKFRAME_-64999_RELATIVE = 'ORX_SPACECRAFT'
+TKFRAME_-64999_MATRIX   = ( 1.0 0.0 0.0
+                            0.0 1.0 0.0
+                            0.0 0.0 1.0
+                          )
+                                                             \begintext
